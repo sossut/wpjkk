@@ -4,16 +4,16 @@ import {MediaContext} from '../contexts/MediaContext';
 import {useUser} from '../hooks/ApiHooks';
 
 const Nav = () => {
-  const {getUser} = useUser();
   const [user, setUser] = useContext(MediaContext);
+  const {getUser} = useUser();
   const navigate = useNavigate();
+
   const fetchUser = async () => {
     try {
       const userData = await getUser(localStorage.getItem('token'));
       console.log(userData);
       setUser(userData);
-      navigate('/home');
-    } catch (e) {
+    } catch (err) {
       setUser(null);
       navigate('/');
     }
@@ -22,7 +22,9 @@ const Nav = () => {
   useEffect(() => {
     fetchUser();
   }, []);
+
   console.log(user);
+
   return (
     <nav>
       <ul>
