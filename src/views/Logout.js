@@ -1,9 +1,8 @@
-import React from 'react';
-// eslint-disable-next-line no-unused-vars
-import PropTypes from 'prop-types';
+import {Navigate} from 'react-router-dom';
 
 const Logout = (props) => {
-  return <div>Logout</div>;
+  localStorage.clear();
+  return <Navigate to="/" />;
 };
 
 Logout.propTypes = {};
