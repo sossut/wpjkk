@@ -1,25 +1,28 @@
-import React from 'react';
+import {ImageListItem, ImageListItemBar} from '@mui/material';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
+import {mediaUrl} from '../utils/variables';
 
 const MediaRow = ({file}) => {
   return (
-    <tr>
-      <td>
-        <img className="pic" src={file.thumbnails.w160} alt="keanu" />
-      </td>
-      <td>
-        <h4>{file.title}</h4>
-        <p>{file.description}</p>
-      </td>
-      <td>
-        <a href={file.filename}>View</a>
-      </td>
-    </tr>
+    <ImageListItem
+      key={file.file_id}
+      component={Link}
+      to={'/single'}
+      state={{file}}
+    >
+      <img
+        src={mediaUrl + file.thumbnails.w320}
+        alt={file.title}
+        loading="lazy"
+      />
+      <ImageListItemBar title={file.title} subtitle={file.description} />
+    </ImageListItem>
   );
 };
 
 MediaRow.propTypes = {
-  file: PropTypes.object.isRequired,
+  file: PropTypes.object,
 };
 
 export default MediaRow;
