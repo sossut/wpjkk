@@ -23,20 +23,19 @@ const useMedia = (showAllFiles, userId) => {
   const getMedia = async () => {
     try {
       setLoading(true);
-      const media = await useTag().getTag(appID);
-      let allFiles = await Promise.all(
+      let media = await useTag().getTag(appID);
+      // jos !showAllFiles, filteröi kirjautuneen
+      // käyttäjän tiedostot media taulukkoon
+      if (!showAllFiles) {
+        media = media.filter((file) => file.user_id === userId);
+      }
+
+      const allFiles = await Promise.all(
         media.map(async (file) => {
           return await fetchJson(`${baseUrl}media/${file.file_id}`);
         })
       );
-      // jos !showAllFiles filteröi kirjautunen käyttäjän tiedostot allFilesiin
-      if (!showAllFiles) {
-        allFiles = allFiles.filter((file) => {
-          if (file.user_id === userId) {
-            return file;
-          }
-        });
-      }
+
       setMediaArray(allFiles);
     } catch (err) {
       alert(err.message);
@@ -47,7 +46,7 @@ const useMedia = (showAllFiles, userId) => {
 
   useEffect(() => {
     getMedia();
-  }, []);
+  }, [userId]);
 
   const postMedia = async (formdata, token) => {
     try {
