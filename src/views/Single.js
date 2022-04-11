@@ -12,8 +12,11 @@ import {
 } from '@mui/material';
 import {safeParseJson} from '../utils/functions';
 import BackButton from '../components/BackButton';
+import {useEffect, useState} from 'react';
+import {useTag} from '../hooks/ApiHooks';
 
 const Single = () => {
+  const [avatar, setAvatar] = useState({});
   const location = useLocation();
   console.log(location);
   const file = location.state.file;
@@ -26,6 +29,28 @@ const Single = () => {
       sepia: 0,
     },
   };
+
+  const {getTag} = useTag();
+
+  const fetchAvatar = async () => {
+    try {
+      if (file) {
+        const avatars = await getTag('avatar_' + file.user_id);
+        const ava = avatars.pop();
+        ava.filename = mediaUrl + ava.filename;
+        setAvatar(ava);
+      }
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchAvatar();
+  }, []);
+
+  console.log(avatar);
+
   return (
     <>
       <BackButton />
@@ -34,8 +59,10 @@ const Single = () => {
       </Typography>
       <Card>
         <CardMedia
-          component="img"
-          image={mediaUrl + file.filename}
+          component={file.media_type === 'image' ? 'img' : file.media_type}
+          controls={true}
+          poster={mediaUrl + file.screenshot}
+          src={mediaUrl + file.filename}
           alt={file.title}
           sx={{
             height: '60vh',
@@ -52,7 +79,7 @@ const Single = () => {
           <List>
             <ListItem>
               <ListItemAvatar>
-                <Avatar variant={'circle'} src={'logo192.png'} />
+                <Avatar variant={'circle'} src={avatar.filename} />
               </ListItemAvatar>
               <Typography variant="subtitle2">{file.user_id}</Typography>
             </ListItem>

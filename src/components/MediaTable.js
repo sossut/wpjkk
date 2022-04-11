@@ -1,10 +1,10 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import {CircularProgress, ImageList} from '@mui/material';
 import {useMedia} from '../hooks/ApiHooks';
 import {useWindowSize} from '../hooks/WindowHooks';
 import MediaRow from './MediaRow';
 
-const MediaTable = () => {
+const MediaTable = ({allFiles = true}) => {
   const {mediaArray, loading} = useMedia();
   const windowSize = useWindowSize();
   console.log(mediaArray);
@@ -27,6 +27,8 @@ const MediaTable = () => {
   );
 };
 
-MediaTable.propTypes = {};
+MediaTable.propTypes = {
+  allFiles: PropTypes.bool,
+};
 
 export default MediaTable;
